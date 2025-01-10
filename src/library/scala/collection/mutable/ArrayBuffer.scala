@@ -47,9 +47,9 @@ class ArrayBuffer[A] private (initialElements: Array[AnyRef], initialSize: Int)
     with IterableFactoryDefaults[A, ArrayBuffer]
     with DefaultSerializable {
 
-  def this() = this(new Array[AnyRef](ArrayBuffer.DefaultInitialSize), 0)
+  def this() = this(ArrayBuffer.emptyArray, 0)
 
-  def this(initialSize: Int) = this(new Array[AnyRef](initialSize max 1), 0)
+  def this(initialSize: Int) = this(if (initialSize <= 0) ArrayBuffer.emptyArray else new Array[AnyRef](initialSize), 0)
 
   @transient private[this] var mutationCount: Int = 0
 
@@ -285,7 +285,7 @@ class ArrayBuffer[A] private (initialElements: Array[AnyRef], initialSize: Int)
 @SerialVersionUID(3L)
 object ArrayBuffer extends StrictOptimizedSeqFactory[ArrayBuffer] {
   final val DefaultInitialSize = 16
-  private[this] val emptyArray = new Array[AnyRef](0)
+  private[ArrayBuffer] val emptyArray = new Array[AnyRef](0)
 
   def from[B](coll: collection.IterableOnce[B]): ArrayBuffer[B] = {
     val k = coll.knownSize
@@ -321,7 +321,7 @@ object ArrayBuffer extends StrictOptimizedSeqFactory[ArrayBuffer] {
     else if (targetLen <= arrayLen) -1
     else if (targetLen > VM_MaxArraySize) throw new RuntimeException(s"Array of array-backed collection exceeds VM length limit of $VM_MaxArraySize. Requested length: $targetLen; current length: $arrayLen")
     else if (arrayLen > VM_MaxArraySize / 2) VM_MaxArraySize
-    else math.max(targetLen, math.max(arrayLen * 2, DefaultInitialSize))
+    else math.max(targetLen, math.max(arrayLen  + (arrayLen >> 1), DefaultInitialSize))
 
   // if necessary, copy (curSize elements of) the array to a new array of capacity n.
   // Should use Array.copyOf(array, resizeEnsuring(array.length))?
