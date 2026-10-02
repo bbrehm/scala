@@ -147,3 +147,75 @@ class ArrayDequeBenchmark {
     bh.consume(arr)
   }
 }
+
+@BenchmarkMode(Array(Mode.AverageTime))
+@Fork(2)
+@Threads(1)
+@Warmup(iterations = 10)
+@Measurement(iterations = 10)
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@State(Scope.Benchmark)
+class ArrayDequeMergeBenchmark {
+  //@Param(Array("1000", "100000", "1000000", "10000000")) // Zero-length is empty array
+  @Param(Array("10000000")) // Zero-length is empty array
+  var total_size:Int = _
+  //@Param(Array("1", "10", "100", "1000")) // Zero-length is empty array
+  @Param(Array("1", "10", "1000")) // Zero-length is empty array
+  var nChunks:Int = _
+
+  def mkChunk(sz:Int): mutable.ArrayDeque[String] = {
+    val rs = mutable.ArrayDeque[String]()
+    var idx = 0
+    while(idx < sz){
+      rs.addOne("")
+      idx += 1
+    }
+    rs
+  }
+
+  @Benchmark
+  def collectAppendAll(bh:Blackhole):Unit = {
+    val chunkSize = total_size/nChunks
+    val res = mutable.ArrayDeque[String]()
+    for(i <- Range(0, nChunks)){
+      val other = mkChunk(chunkSize)
+      res.appendAll(other)
+    }
+    bh.consume(res)
+  }
+  @Benchmark
+  def collectPrependAll(bh:Blackhole):Unit = {
+    val chunkSize = total_size/nChunks
+    val res = mutable.ArrayDeque[String]()
+    for(i <- Range(0, nChunks)){
+      val other = mkChunk(chunkSize)
+      res.prependAll(other)
+    }
+    bh.consume(res)
+  }
+  @Benchmark
+  def collectAppendOther(bh:Blackhole):Unit = {
+    val chunkSize = total_size/nChunks
+    val res = mutable.ArrayDeque[String]()
+    for(i <- Range(0, nChunks)){
+      val other = mkChunk(chunkSize)
+      res.appendOther(other)
+    }
+    bh.consume(res)
+  }
+  @Benchmark
+  def collectPrependOther(bh:Blackhole):Unit = {
+    val chunkSize = total_size/nChunks
+    val res = mutable.ArrayDeque[String]()
+    for(i <- Range(0, nChunks)){
+      val other = mkChunk(chunkSize)
+      res.prependOther(other)
+    }
+    bh.consume(res)
+  }
+
+
+
+
+
+}

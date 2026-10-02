@@ -99,6 +99,40 @@ class ArrayDeque[A] protected (
     this
   }
 
+  def appendOther(elems: ArrayDeque[A]): this.type = {
+    val n = length
+    val srcLength = elems.length
+    val finalLength = srcLength + n
+    ensureSize(finalLength)
+    val firstCopy = Math.min(array.length - end, srcLength)
+    val secondCopy = srcLength - firstCopy
+    elems.copySliceToArray(srcStart = 0, dest = array, destStart = end, maxItems = firstCopy)
+    elems.copySliceToArray(srcStart = firstCopy, dest = array, destStart = 0, maxItems = secondCopy)
+    end = end_+(srcLength)
+    this
+  }
+
+  def prependOther(elems: ArrayDeque[A]): this.type = {
+    val n = length
+    val srcLength = elems.length
+    val finalLength = srcLength + n
+    if(mustGrow(finalLength)){
+      val array2 = ArrayDeque.alloc(finalLength)
+      elems.copySliceToArray(srcStart = 0, dest = array2, destStart = 0, maxItems = srcLength)
+      copySliceToArray(srcStart = 0, dest = array2, destStart = srcLength, maxItems = n)
+      reset(array = array2, start = 0, end = finalLength)
+    } else {
+      val firstCopy = Math.min(start - 0, srcLength)
+      val secondCopy = srcLength - firstCopy
+      val newStart = start_-(srcLength)
+
+      elems.copySliceToArray(srcStart = srcLength - firstCopy , dest = array, destStart = start - firstCopy, maxItems = firstCopy)
+      elems.copySliceToArray(srcStart = 0 , dest = array, destStart = newStart, maxItems = secondCopy)
+      start = newStart
+    }
+    this
+  }
+
   override def prependAll(elems: IterableOnce[A]): this.type = {
     val it = elems.iterator
     if (it.nonEmpty) {
@@ -140,6 +174,7 @@ class ArrayDeque[A] protected (
     }
     this
   }
+
 
   def insert(idx: Int, elem: A): Unit = {
     requireBounds(idx, length+1)
