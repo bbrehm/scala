@@ -1,4 +1,8 @@
 sbt:Scala 2.13> bench/Jmh/run scala.collection.mutable.ArrayDequeMergeBenchmark.* -i 10 -wi 2 -f1  -r 2s
+[info] # VM version: JDK 21.0.12.1, OpenJDK 64-Bit Server VM, 21.0.12.1+1
+#AMD RYZEN AI MAX+ 395 w/ Radeon 8060S
+
+
 [info] Benchmark                                     (nChunks)  (total_size)  Mode  Cnt       Score       Error  Units
 [info] ArrayDequeMergeBenchmark.collectAppendAll             1      10000000  avgt   10  150681.205 ± 26735.440  us/op
 [info] ArrayDequeMergeBenchmark.collectAppendAll            10      10000000  avgt   10  123385.779 ±  5760.157  us/op
