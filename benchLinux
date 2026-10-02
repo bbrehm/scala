@@ -1,0 +1,14 @@
+sbt:Scala 2.13> bench/Jmh/run scala.collection.mutable.ArrayDequeMergeBenchmark.* -i 10 -wi 2 -f1  -r 2s
+[info] Benchmark                                     (nChunks)  (total_size)  Mode  Cnt       Score       Error  Units
+[info] ArrayDequeMergeBenchmark.collectAppendAll             1      10000000  avgt   10  150681.205 ± 26735.440  us/op
+[info] ArrayDequeMergeBenchmark.collectAppendAll            10      10000000  avgt   10  123385.779 ±  5760.157  us/op
+[info] ArrayDequeMergeBenchmark.collectAppendAll          1000      10000000  avgt   10   98377.637 ±  8776.875  us/op
+[info] ArrayDequeMergeBenchmark.collectAppendOther           1      10000000  avgt   10  100016.146 ± 15475.640  us/op
+[info] ArrayDequeMergeBenchmark.collectAppendOther          10      10000000  avgt   10   76120.572 ±  5786.643  us/op
+[info] ArrayDequeMergeBenchmark.collectAppendOther        1000      10000000  avgt   10   51545.086 ±  4080.945  us/op
+[info] ArrayDequeMergeBenchmark.collectPrependAll            1      10000000  avgt   10  159208.046 ± 21747.521  us/op
+[info] ArrayDequeMergeBenchmark.collectPrependAll           10      10000000  avgt   10  125949.674 ±  4908.315  us/op
+[info] ArrayDequeMergeBenchmark.collectPrependAll         1000      10000000  avgt   10  100898.858 ±  4591.081  us/op
+[info] ArrayDequeMergeBenchmark.collectPrependOther          1      10000000  avgt   10   99899.167 ± 25286.322  us/op
+[info] ArrayDequeMergeBenchmark.collectPrependOther         10      10000000  avgt   10   75991.726 ±  8844.365  us/op
+[info] ArrayDequeMergeBenchmark.collectPrependOther       1000      10000000  avgt   10   51388.867 ±  3976.519  us/op
